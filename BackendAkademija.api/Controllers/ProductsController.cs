@@ -1,5 +1,7 @@
 using BackendAkademija.Application.Products.Queries;
+using BackendAkademija.Application.Products.Queries.FilterProducts;
 using BackendAkademija.Application.Products.Queries.GetProductById;
+using BackendAkademija.Application.Products.Queries.SearchProductsQuery;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,4 +31,28 @@ public class ProductsController(IMediator mediator) : ControllerBase
     }
     
     //TODO: Dovristi FilterProducts SearchProducts
+
+    [HttpGet("filter")]
+    public async Task<IActionResult> FilterProducts(
+        [FromQuery] string? category,
+        [FromQuery] decimal? minPrice,
+        [FromQuery] decimal? maxPrice,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new FilterProductsQuery(category, minPrice, maxPrice), cancellationToken);
+        return Ok(result);
+    }
+    
+    
+    [HttpGet("search")]
+    public async Task<IActionResult> SearchProducts(
+        [FromQuery] string searchTerm,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(searchTerm))
+            return BadRequest(new { Message = "Search term shoul not be empyt" });
+
+        var result = await mediator.Send(new SearchProductsQuery(searchTerm), ct);
+        return Ok(result);
+    }
 }
