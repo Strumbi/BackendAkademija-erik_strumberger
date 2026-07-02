@@ -1,6 +1,8 @@
 using BackendAkademija.Application.Interfaces;
 using BackendAkademija.Infrastructure.Auth;
 using BackendAkademija.Infrastructure.ExternalServices.DummyJson;
+using BackendAkademija.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,8 +24,12 @@ public static class DependencyInjection
             if(baseUrl != null) client.BaseAddress = new Uri(baseUrl);
         });
         
-
+        
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddScoped<IRefreshTokenStore, RefreshTokenStore>();
         
         return services;
 
