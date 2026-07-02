@@ -11,7 +11,7 @@ namespace BackendAkademija.api.Controllers;
 public class AuthController(IAuthService authService) : ControllerBase
 {
 
-    [HttpPost]
+    [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequestDto loginRequestDto, CancellationToken cancellationToken)
     {
         var result = await authService.LoginAsync(loginRequestDto.Username, loginRequestDto.Password, cancellationToken);

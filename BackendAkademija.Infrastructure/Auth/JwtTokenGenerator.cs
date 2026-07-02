@@ -30,7 +30,7 @@ public class JwtTokenGenerator(IConfiguration configuration) : IJwtTokenGenerato
             issuer: jwtSection["Issuer"],
             audience: jwtSection["Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddSeconds(double.Parse(jwtSection["ExpiryMinutes"] ?? "60")),
+            expires: DateTime.UtcNow.AddMinutes(double.Parse(jwtSection["ExpiryMinutes"] ?? "60")),
             signingCredentials: credientals
         );
 
